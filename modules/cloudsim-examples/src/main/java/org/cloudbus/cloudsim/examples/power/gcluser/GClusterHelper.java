@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
@@ -13,15 +15,14 @@ import org.cloudbus.cloudsim.UtilizationModel;
 import org.cloudbus.cloudsim.UtilizationModelGClusterInMemory;
 import org.cloudbus.cloudsim.UtilizationModelNull;
 import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.examples.power.Constants;
 import org.cloudbus.cloudsim.power.PowerVm;
 
 public class GClusterHelper {
-	private final Map<Integer, String> VMsMap;
+	private final Map<Integer,String> VMsMap;
 	private int brokerId;
 	private String inputFolderName;
 	public GClusterHelper(int brokerId, String inputFolderName) {
-		this.VMsMap= new HashMap<Integer, String>();
+		this.VMsMap=new HashMap<Integer,String>();
 		this.setBrokerId(brokerId);
 		this.setInputFolderName(inputFolderName);
 	}
@@ -50,13 +51,13 @@ public class GClusterHelper {
 			try {
 				cloudlet = new Cloudlet(
 						i,
-						Constants.CLOUDLET_LENGTH,
-						Constants.CLOUDLET_PES,
+						GClusterConstants.CLOUDLET_LENGTH,
+						GClusterConstants.CLOUDLET_PES,
 						fileSize,
 						outputSize,
 						new UtilizationModelGClusterInMemory(
 								files[i].getAbsolutePath(),
-								Constants.SCHEDULING_INTERVAL), utilizationModelNull, utilizationModelNull);
+								GClusterConstants.SCHEDULING_INTERVAL), utilizationModelNull, utilizationModelNull);
 				
 				setVMsMap(i,files[i].getName());
 			} catch (Exception e) {
@@ -78,23 +79,36 @@ public class GClusterHelper {
 	 * 
 	 * @return the list< vm>
 	 */
-	public static List<Vm> createVmList(int brokerId, Map<Integer, String> VMsMap) {
+	public List<Vm> createVmList(int brokerId, Map<Integer, String> vmNames) {
 		List<Vm> vms = new ArrayList<Vm>();
-		for (int i = 0; i < vmsNumber; i++) {
-			int vmType = i / (int) Math.ceil((double) vmsNumber / Constants.VM_TYPES);
+		List<VMsType> VMs = null;
+		try {
+			VMs = GClusterConstants.VMTypes();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for (int i=0; i < vmNames.size() ; i++ ) {
+			String VM=vmNames.get(i);
+			List<VMsType> VMType=VMs.stream().filter(a->Objects.equals(a.getMachineID(),VM)).collect(Collectors.toList());
+			int VM_MIPS=(int) VMType.get(0).getCPU();
+			int VM_RAM=(int) VMType.get(0).getRAM();
+			int VM_PES=1;
 			vms.add(new PowerVm(
 					i,
 					brokerId,
-					Constants.VM_MIPS[vmType],
-					Constants.VM_PES[vmType],
-					Constants.VM_RAM[vmType],
-					Constants.VM_BW,
-					Constants.VM_SIZE,
+					VM_MIPS,
+					VM_PES,
+					VM_RAM,
+					GClusterConstants.VM_BW,
+					GClusterConstants.VM_SIZE,
 					1,
 					"Xen",
-					new CloudletSchedulerDynamicWorkload(Constants.VM_MIPS[vmType], Constants.VM_PES[vmType]),
-					Constants.SCHEDULING_INTERVAL));
+					new CloudletSchedulerDynamicWorkload(VM_MIPS, VM_PES),
+					GClusterConstants.SCHEDULING_INTERVAL));
 		}
+		
 		return vms;
 	}
 
@@ -110,10 +124,10 @@ public class GClusterHelper {
 	public void setInputFolderName(String inputFolderName) {
 		this.inputFolderName = inputFolderName;
 	}
-	public Map<Integer, String> getVMsMap() {
+	public Map<Integer,String> getVMsMap() {
 		return VMsMap;
 	}
-	public void setVMsMap(Integer id,String VM) {
-		VMsMap.put(id, VM);
+	public void setVMsMap(Integer i,String VM) {
+		VMsMap.put(i,VM);
 	}
 }

@@ -2,9 +2,7 @@ package org.cloudbus.cloudsim.examples.power.gcluser;
 
 import java.io.IOException;
 
-
-
-public class LrMmt {
+public class LrMc {
 	/**
 	 * The main method.
 	 * 
@@ -18,7 +16,7 @@ public class LrMmt {
 		String outputFolder = "/Users/hamid.moghaddam/Documents/PhD/output";
 		String workload = "GoogleData"; // PlanetLab workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
-		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
+		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy
 
 		new GClusterRunner(

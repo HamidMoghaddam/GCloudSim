@@ -16,6 +16,11 @@
   		<artifactId>cloudsim</artifactId>
   		<version>${project.version}</version>
   	</dependency>  
+  	<dependency>
+        	<groupId>com.opencsv</groupId>
+        	<artifactId>opencsv</artifactId>
+        	<version>4.0</version>
+        </dependency>
   </dependencies>
     
 </project>

@@ -28,7 +28,7 @@ public class UtilizationModelGClusterInMemory implements UtilizationModel{
 		BufferedReader input = new BufferedReader(new FileReader(inputPath));
 		int n = data.length;
 		for (int i = 0; i < n - 1; i++) {
-			data[i] = Integer.valueOf(input.readLine()) ;
+			data[i] = Double.valueOf(input.readLine()) ;
 		}
 		data[n - 1] = data[n - 2];
 		input.close();
@@ -51,7 +51,7 @@ public class UtilizationModelGClusterInMemory implements UtilizationModel{
 		BufferedReader input = new BufferedReader(new FileReader(inputPath));
 		int n = data.length;
 		for (int i = 0; i < n - 1; i++) {
-			data[i] = Integer.valueOf(input.readLine()) ;
+			data[i] = Double.valueOf(input.readLine()) ;
 		}
 		data[n - 1] = data[n - 2];
 		input.close();

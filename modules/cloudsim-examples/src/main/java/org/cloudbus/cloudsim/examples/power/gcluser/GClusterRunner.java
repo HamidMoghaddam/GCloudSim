@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.examples.power.gcluser;
 
 import java.util.Calendar;
+
 import java.util.Map;
 
 import org.cloudbus.cloudsim.Log;
@@ -56,8 +57,8 @@ public class GClusterRunner extends RunnerAbstract {
 			int brokerId = broker.getId();
 			GClusterHelper gHelper= new GClusterHelper(brokerId, inputFolder);
 			cloudletList = gHelper.createCloudletListGCluster();
-			Map<Integer, String> vmNames=gHelper.getVMsMap();
-			vmList = Helper.createVmList(brokerId, vmNames);
+			Map<Integer,String> vmNames=gHelper.getVMsMap();
+			vmList = gHelper.createVmList(brokerId, vmNames);
 			hostList = Helper.createHostList(GClusterConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();

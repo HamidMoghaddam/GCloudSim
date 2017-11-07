@@ -73,7 +73,12 @@
 		<artifactId>documentation</artifactId>
 		<version>${project.version}</version>
 		<type>jar</type>
-  	</dependency>   	  	
+  	</dependency>   
+  	<dependency>
+        	<groupId>com.opencsv</groupId>
+        	<artifactId>opencsv</artifactId>
+        	<version>4.0</version>
+    </dependency>	  	
   </dependencies>
   
 </project>
