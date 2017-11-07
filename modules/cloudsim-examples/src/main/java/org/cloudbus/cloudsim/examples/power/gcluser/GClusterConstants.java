@@ -25,7 +25,8 @@ public class GClusterConstants {
 	/*
 	 * VM instance types:
 	 *   The Google Cluster has specific VM CPU and Memory configurations for each VMs so this function load 
-	 *   the VM configurations from a CSV file
+	 *   the VM configurations from a CSV file. The CPU and memory usages are normalized by Google so please 
+	 *   check the VMsType class for Maximum CPU and memory
 	 *
 	 */
 	public final static int VM_BW		= 100000; // 100 Mbit/s
