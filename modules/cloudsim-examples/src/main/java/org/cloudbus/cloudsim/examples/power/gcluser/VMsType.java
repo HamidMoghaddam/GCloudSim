@@ -32,7 +32,7 @@ public class VMsType {
 	}
 	
 	public void setCPU(double CPU) {
-		int maxCPU=2000;
+		int maxCPU=2500;
 		this.CPU=CPU*maxCPU;
 	}
 }
