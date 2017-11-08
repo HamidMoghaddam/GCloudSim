@@ -4,8 +4,8 @@ import java.util.List;
 
 
 import org.cloudbus.cloudsim.power.models.PowerModel;
-import org.cloudbus.cloudsim.power.models.PowerModelSpecPowerHpProLiantMl110G4Xeon3040;
-import org.cloudbus.cloudsim.power.models.PowerModelSpecPowerHpProLiantMl110G5Xeon3075;
+import org.cloudbus.cloudsim.power.models.PowerModelSpecPowerSupermicro1022GSAmd6262;
+import org.cloudbus.cloudsim.power.models.PowerModelSpecPowerSupermicro1022GSAmd6380;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,7 +13,7 @@ import java.io.FileReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class GClusterConstants {
-	public final static int NUMBER_OF_HOSTS = 1000;
+	public final static int NUMBER_OF_HOSTS = 1200;
 	
 
 	public final static double SCHEDULING_INTERVAL = 300;
@@ -42,19 +42,19 @@ public class GClusterConstants {
 
 	/*
 	 * Host types:
-	 *   HP ProLiant ML110 G4 (1 x [Xeon 3040 1860 MHz, 2 cores], 4GB)
-	 *   HP ProLiant ML110 G5 (1 x [Xeon 3075 2660 MHz, 2 cores], 4GB)
+	 *   Supermicro Computer Inc. 1022G-NTF (2 x [AMD Opteron 6262 HE 1600 MHz, 32 cores], 32GB)
+	 *   Supermicro Computer Inc. 1022G-NTF (2 x [AMD Opteron 6380 HE 2500 MHz, 32 cores], 64GB)
 	 *   We increase the memory size to enable over-subscription (x4)
 	 */
 	public final static int HOST_TYPES	 = 2;
-	public final static int[] HOST_MIPS	 = { 1860, 2660 };
-	public final static int[] HOST_PES	 = { 2, 2 };
-	public final static int[] HOST_RAM	 = { 4096, 4096 };
+	public final static int[] HOST_MIPS	 = { 1600, 2500 };
+	public final static int[] HOST_PES	 = { 32, 32};
+	public final static int[] HOST_RAM	 = { 32768,65536 };
 	public final static int HOST_BW		 = 1000000; // 1 Gbit/s
 	public final static int HOST_STORAGE = 1000000; // 1 GB
 
 	public final static PowerModel[] HOST_POWER = {
-		new PowerModelSpecPowerHpProLiantMl110G4Xeon3040(),
-		new PowerModelSpecPowerHpProLiantMl110G5Xeon3075()
-	};
+		new PowerModelSpecPowerSupermicro1022GSAmd6262(),
+		new PowerModelSpecPowerSupermicro1022GSAmd6380(),
+		};
 }
