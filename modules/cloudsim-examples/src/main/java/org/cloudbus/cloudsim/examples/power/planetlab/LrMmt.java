@@ -34,7 +34,7 @@ public class LrMmt {
 		boolean outputToFile = false;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/planetlab").getPath();
 		String outputFolder = "/Users/hamid.moghaddam/Documents/PhD/output";
-		String workload = "20110303"; // PlanetLab workload
+		String workload = "FifthDay"; // PlanetLab workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
 		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy

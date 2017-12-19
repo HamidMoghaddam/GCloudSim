@@ -14,7 +14,7 @@ public class LrMc {
 		boolean outputToFile = false;
 		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/GCluster").getPath();
 		String outputFolder = "/Users/hamid.moghaddam/Documents/PhD/output";
-		String workload = "GoogleData"; // PlanetLab workload
+		String workload = "GoogleData"; // Google workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
 		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy

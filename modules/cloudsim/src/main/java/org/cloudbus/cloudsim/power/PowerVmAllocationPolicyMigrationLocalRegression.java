@@ -109,7 +109,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	protected boolean isHostOverUtilized(PowerHost host) {
 		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
 		double[] utilizationHistory = _host.getUtilizationHistory();
-		int length = 10; // we use 10 to make the regression responsive enough to latest values
+		int length = 20; // we use 10 to make the regression responsive enough to latest values
 		if (utilizationHistory.length < length) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
 		}

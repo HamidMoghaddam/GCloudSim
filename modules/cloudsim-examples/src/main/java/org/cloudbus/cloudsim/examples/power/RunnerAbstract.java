@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
@@ -18,10 +19,12 @@ import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationAbstract;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationInterQuartileRange;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegression;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationLocalRegressionRobust;
+import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMLs;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicyMigrationStaticThreshold;
 import org.cloudbus.cloudsim.power.PowerVmAllocationPolicySimple;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicy;
+import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyClusterCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMaximumCorrelation;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumMigrationTime;
 import org.cloudbus.cloudsim.power.PowerVmSelectionPolicyMinimumUtilization;
@@ -165,7 +168,8 @@ public abstract class RunnerAbstract {
 					vmAllocationPolicy);
 
 			datacenter.setDisableMigrations(false);
-
+			// Shuffle VMs list to allocate randomize VMs to Hosts at the beginning
+			Collections.shuffle(vmList);
 			broker.submitVmList(vmList);
 			broker.submitCloudletList(cloudletList);
 
@@ -282,7 +286,18 @@ public abstract class RunnerAbstract {
 					hostList,
 					vmSelectionPolicy,
 					parameter);
-		} else if (vmAllocationPolicyName.equals("dvfs")) {
+		} else if (vmAllocationPolicyName.equals("ml")) {
+			PowerVmAllocationPolicyMigrationAbstract fallbackVmSelectionPolicy = new PowerVmAllocationPolicyMigrationStaticThreshold(
+					hostList,
+					vmSelectionPolicy,
+					0.7);
+			vmAllocationPolicy = new PowerVmAllocationPolicyMigrationMLs(
+					hostList,
+					vmSelectionPolicy,
+					parameter,
+					Constants.SCHEDULING_INTERVAL,
+					fallbackVmSelectionPolicy);
+		}else if (vmAllocationPolicyName.equals("dvfs")) {
 			vmAllocationPolicy = new PowerVmAllocationPolicySimple(hostList);
 		} else {
 			System.out.println("Unknown VM allocation policy: " + vmAllocationPolicyName);
@@ -308,6 +323,9 @@ public abstract class RunnerAbstract {
 			vmSelectionPolicy = new PowerVmSelectionPolicyMinimumUtilization();
 		} else if (vmSelectionPolicyName.equals("rs")) {
 			vmSelectionPolicy = new PowerVmSelectionPolicyRandomSelection();
+		} else if (vmSelectionPolicyName.equals("cc")) {
+			vmSelectionPolicy = new PowerVmSelectionPolicyClusterCorrelation(
+					new PowerVmSelectionPolicyMinimumMigrationTime());
 		} else {
 			System.out.println("Unknown VM selection policy: " + vmSelectionPolicyName);
 			System.exit(0);

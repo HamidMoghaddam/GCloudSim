@@ -33,8 +33,8 @@ public class LrMc {
 		boolean enableOutput = true;
 		boolean outputToFile = false;
 		String inputFolder = LrMc.class.getClassLoader().getResource("workload/planetlab").getPath();
-		String outputFolder = "output";
-		String workload = "20110303"; // PlanetLab workload
+		String outputFolder = "/Users/hamid.moghaddam/Documents/PhD/output";
+		String workload = "FiveDays"; // PlanetLab workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
 		String vmSelectionPolicy = "mc"; // Maximum Correlation (MC) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy

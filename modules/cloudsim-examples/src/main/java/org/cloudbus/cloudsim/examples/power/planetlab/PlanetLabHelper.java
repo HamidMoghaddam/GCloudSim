@@ -3,6 +3,7 @@ package org.cloudbus.cloudsim.examples.power.planetlab;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.cloudbus.cloudsim.Cloudlet;
@@ -45,7 +46,8 @@ public class PlanetLabHelper {
 
 		File inputFolder = new File(inputFolderName);
 		File[] files = inputFolder.listFiles();
-
+		// Guaranty to have same order of VMs in memory
+		Arrays.sort(files);
 		for (int i = 0; i < files.length; i++) {
 			Cloudlet cloudlet = null;
 			try {
