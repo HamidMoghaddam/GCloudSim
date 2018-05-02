@@ -9,13 +9,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
-import org.cloudbus.cloudsim.UtilizationModel;
-import org.cloudbus.cloudsim.UtilizationModelGClusterInMemory;
-import org.cloudbus.cloudsim.UtilizationModelNull;
-import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.*;
+import org.cloudbus.cloudsim.examples.power.Constants;
+import org.cloudbus.cloudsim.power.PowerDatacenterBroker;
+import org.cloudbus.cloudsim.power.PowerHost;
+import org.cloudbus.cloudsim.power.PowerHostUtilizationHistory;
 import org.cloudbus.cloudsim.power.PowerVm;
+import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
+import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
 public class GClusterHelper {
 	private final Map<Integer,String> VMsMap;
@@ -27,10 +29,7 @@ public class GClusterHelper {
 		this.setInputFolderName(inputFolderName);
 	}
 	/**
-	 * Creates the cloudlet list Google Cluster.
-	 * 
-	 * @param brokerId the broker id
-	 * @param inputFolderName the input folder name
+	 * Creates the cloudlet list Google Clusters
 	 * @return the list
 	 * @throws FileNotFoundException the file not found exception
 	 */
@@ -75,7 +74,7 @@ public class GClusterHelper {
 	 * Creates the vm list.
 	 * 
 	 * @param brokerId the broker id
-	 * @param vmsNumber the vms number
+	 * @param vmNames the vms name
 	 * 
 	 * @return the list< vm>
 	 */
@@ -110,6 +109,49 @@ public class GClusterHelper {
 		}
 		
 		return vms;
+	}
+	/**
+	 * Creates the host list.
+	 *
+	 * @param hostsNumber the hosts number
+	 *
+	 * @return the list< power host>
+	 */
+	public static List<PowerHost> createHostList(int hostsNumber) {
+		List<PowerHost> hostList = new ArrayList<PowerHost>();
+		for (int i = 0; i < hostsNumber; i++) {
+			int hostType = i % GClusterConstants.HOST_TYPES;
+
+			List<Pe> peList = new ArrayList<Pe>();
+			for (int j = 0; j < GClusterConstants.HOST_PES[hostType]; j++) {
+				peList.add(new Pe(j, new PeProvisionerSimple(GClusterConstants.HOST_MIPS[hostType])));
+			}
+
+			hostList.add(new PowerHostUtilizationHistory(
+					i,
+					new RamProvisionerSimple(GClusterConstants.HOST_RAM[hostType]),
+					new BwProvisionerSimple(GClusterConstants.HOST_BW),
+					GClusterConstants.HOST_STORAGE,
+					peList,
+					new VmSchedulerTimeSharedOverSubscription(peList),
+					GClusterConstants.HOST_POWER[hostType]));
+		}
+		return hostList;
+	}
+	/**
+	 * Creates the broker.
+	 *
+	 * @return the datacenter broker
+	 */
+	public static DatacenterBroker createBroker() {
+		DatacenterBroker broker = null;
+		try {
+			broker = new PowerDatacenterBroker("Broker");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		return broker;
 	}
 
 	public int getBrokerId() {
