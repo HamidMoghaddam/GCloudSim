@@ -53,13 +53,13 @@ public class GClusterRunner extends RunnerAbstract {
 		try {
 			CloudSim.init(1, Calendar.getInstance(), false);
 
-			broker = Helper.createBroker();
+			broker = GClusterHelper.createBroker();
 			int brokerId = broker.getId();
 			GClusterHelper gHelper= new GClusterHelper(brokerId, inputFolder);
 			cloudletList = gHelper.createCloudletListGCluster();
 			Map<Integer,String> vmNames=gHelper.getVMsMap();
 			vmList = gHelper.createVmList(brokerId, vmNames);
-			hostList = Helper.createHostList(GClusterConstants.NUMBER_OF_HOSTS);
+			hostList = GClusterHelper.createHostList(GClusterConstants.NUMBER_OF_HOSTS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.printLine("The simulation has been terminated due to an unexpected error");

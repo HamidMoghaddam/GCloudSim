@@ -13,7 +13,7 @@ import java.io.FileReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class GClusterConstants {
-	public final static int NUMBER_OF_HOSTS = 1200;
+	public final static int NUMBER_OF_HOSTS = 140;
 	
 
 	public final static double SCHEDULING_INTERVAL = 300;
