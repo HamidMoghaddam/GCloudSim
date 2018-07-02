@@ -14,21 +14,24 @@ public class LrMmt {
 	public static void main(String[] args) throws IOException {
 		boolean enableOutput = true;
 		boolean outputToFile = false;
-		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/GCluster").getPath();
+		String inputFolder = LrMmt.class.getClassLoader().getResource("workload/GCluster/splittedPlatform2").getPath();
 		String outputFolder = "/Users/hamid.moghaddam/Documents/PhD/output";
-		String workload = "platform2"; // GoogleData workload
+		String workload = ""; // GoogleData workload
 		String vmAllocationPolicy = "lr"; // Local Regression (LR) VM allocation policy
 		String vmSelectionPolicy = "mmt"; // Minimum Migration Time (MMT) VM selection policy
 		String parameter = "1.2"; // the safety parameter of the LR policy
 
-		new GClusterRunner(
-				enableOutput,
-				outputToFile,
-				inputFolder,
-				outputFolder,
-				workload,
-				vmAllocationPolicy,
-				vmSelectionPolicy,
-				parameter);
+		for (int i=0;i<29;i++){
+			workload=Integer.toString(i);
+			new GClusterRunner(
+					enableOutput,
+					outputToFile,
+					inputFolder,
+					outputFolder,
+					workload,
+					vmAllocationPolicy,
+					vmSelectionPolicy,
+					parameter);
+		}
 	}
 }
