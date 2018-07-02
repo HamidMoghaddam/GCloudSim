@@ -169,7 +169,7 @@ public abstract class RunnerAbstract {
 
 			datacenter.setDisableMigrations(false);
 			// Shuffle VMs list to allocate randomize VMs to Hosts at the beginning
-			Collections.shuffle(vmList);
+			//Collections.shuffle(vmList);
 			broker.submitVmList(vmList);
 			broker.submitCloudletList(cloudletList);
 
