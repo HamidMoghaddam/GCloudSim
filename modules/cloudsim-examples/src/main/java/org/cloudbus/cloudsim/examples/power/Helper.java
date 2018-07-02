@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.opencsv.CSVWriter;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerDynamicWorkload;
 import org.cloudbus.cloudsim.Datacenter;
@@ -315,7 +316,16 @@ public class Helper {
 
 			StringBuilder data = new StringBuilder();
 			String delimeter = ",";
-
+			try {
+				int numberOfOverutilzedHosts = numberOfReOverUtilizingHosts(hosts);
+				CSVWriter writer = new CSVWriter(new FileWriter(outputFolder + "/stats/GCloudSim.csv", true));
+				String val=parseExperimentName(experimentName) + String.format("%.5f", energy) + delimeter+ String.format("%d", numberOfMigrations) + delimeter+ String.format("%.10f", sla)+ delimeter+ String.format("%.10f", sla*energy)+ delimeter+ String.format("%d", numberOfOverutilzedHosts);
+				writer.writeNext(val.split(","));
+				writer.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				System.exit(0);
+			}
 			data.append(experimentName + delimeter);
 			data.append(parseExperimentName(experimentName));
 			data.append(String.format("%d", numberOfHosts) + delimeter);
@@ -484,6 +494,41 @@ public class Helper {
 		return csvName.toString();
 	}
 
+	/**
+	 * Finding number of re-overutilized hosts
+	 * @param hosts
+	 * @return number of re-overutilization
+	 */
+	private static int numberOfReOverUtilizingHosts(List<Host> hosts){
+		int numberOfOverUtilization = 0;
+		for (Host _host : hosts) {
+			HostDynamicWorkload host = (HostDynamicWorkload) _host;
+			double previousTime = -1;
+			double currentAllocated = 0;
+			double currentRequested = 0;
+			boolean previousIsActive = true;
+			boolean previousOverutilized = false;
+			for (HostStateHistoryEntry entry : host.getStateHistory()) {
+				if (previousTime != -1 && previousIsActive) {
+					currentAllocated = entry.getAllocatedMips();
+					currentRequested = entry.getRequestedMips();
+					double timeDiff = Math.round((entry.getTime() - previousTime)/300)*300;
+					if (currentAllocated < currentRequested){
+						if (timeDiff == 300 && previousOverutilized==true){
+							numberOfOverUtilization+=1;
+						}
+						previousOverutilized = true;
+					}else {
+						previousOverutilized = false;
+					}
+				}
+
+				previousTime = entry.getTime();
+				previousIsActive = entry.isActive();
+			}
+		}
+		return numberOfOverUtilization;
+	}
 	/**
 	 * Gets the sla time per active host.
 	 * 
